@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  api-veiculos:
+    build: ./api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app
+    restart: always
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - api-veiculos
+    restart: always

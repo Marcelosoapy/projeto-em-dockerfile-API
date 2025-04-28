@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Veículos</title>
+</head>
+<body>
+    <h1>Cadastro de Veículos</h1>
+
+    <form id="form-veiculo">
+        Marca: <input type="text" id="marca"><br>
+        Modelo: <input type="text" id="modelo"><br>
+        Ano: <input type="number" id="ano"><br>
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <h2>Veículos Cadastrados</h2>
+    <ul id="lista-veiculos"></ul>
+
+    <script>
+        const apiBaseUrl = 'http://localhost:8000';
+    </script>
+
+    <script>
+        async function carregarVeiculos() {
+            const resposta = await fetch('http://localhost:8000');
+            const veiculos = await resposta.json();
+            const lista = document.getElementById('lista-veiculos');
+            lista.innerHTML = "";
+            veiculos.forEach(v => {
+                const item = document.createElement('li');
+                item.textContent = `${v.marca} ${v.modelo} (${v.ano})`;
+                lista.appendChild(item);
+            });
+        }
+
+        document.getElementById('form-veiculo').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const marca = document.getElementById('marca').value;
+            const modelo = document.getElementById('modelo').value;
+            const ano = parseInt(document.getElementById('ano').value);
+
+            await fetch('http://localhost:8000', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ marca, modelo, ano })
+            });
+            carregarVeiculos();
+        });
+
+        carregarVeiculos();
+        
+    </script>
+</body>
+</html>
